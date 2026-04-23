@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Port Russel</title>
+</head>
+<body>
+    <h1>Login</h1>
+
+    <form id="loginForm">
+        <input type="email" id="email" placeholder="Email" required><br><br>
+        <input type="password" id="password" placeholder="Mot de passe" required><br><br>
+        <button type="submit">Se connecter</button>
+    </form>
+
+    <p id="error" style="color: red;"></p>
+
+    <script>
+        const form = document.getElementById('loginForm');
+
+        form.addEventListener('submit', async(e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    document.getElementById('error').textContent = data.message;
+                    return;
+                }
+
+                // Save le token
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+
+                // Rediriger vers la page d'accueil
+                window.location.href = '/dashboard.html';
+
+            } catch (error) {
+                document.getElementById('error').textContent = 'Erreur de connexion. Veuillez réessayer.';
+            }
+        });
+    </script>
+</body>
+</html>
