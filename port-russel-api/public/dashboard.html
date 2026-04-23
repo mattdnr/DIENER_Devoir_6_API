@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+    <h1>Dashboard</h1>
+
+    <p id="userInfo"></p>
+
+    <button onclick="logout()">Déconnexion</button>
+
+    <h2>Catways</h2>
+    <button onclick="loadCatways()">Charger les catways</button>
+    <ul id="catwaysList"></ul>
+
+    <script>
+        const token = localStorage.getItem('token');
+
+        // Protection
+        if (!token) {
+            window.location.href = '/';
+        }
+
+        // Afficher utilisateur
+        const user = JSON.parse(localStorage.getItem('user'));
+        document.getElementById('userInfo').textContent = `Bonjour, ${user.email}`;
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/';
+        }
+
+        // Charger les catways
+        async function loadCatways() {  
+            try {
+                const res = await fetch('/api/catways', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const data = await res.json();
+
+                const list = document.getElementById('catwaysList');
+                list.innerHTML = '';
+
+                data.forEach(catway => {
+                    const li = document.createElement('li');
+                    li.textContent = 'Catway ${catway.catwayNumber} - ${catway.catwayType} -${catway.catwayState}';
+                    list.appendChild(li);
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    </script>
+
+</body>
+</html>
