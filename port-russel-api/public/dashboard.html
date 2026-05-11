@@ -3,30 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Tableau de bord</title>
 </head>
 <body>
-    <h1>Dashboard</h1>
+    <h1>Tableau de bord</h1>
 
     <p id="userInfo"></p>
 
+    <p id="date"></p>
+
+    <h2>Navigation</h2>
+    <div class="menu">
+        <a href="/catways.html">Catways</a>
+        <a href="/reservations.html">Réservations</a>
+        <a href="/users.html">Utilisateurs</a>
+        <a href="/api-docs">Documentation API</a>
+    </div>
+
     <button onclick="logout()">Déconnexion</button>
 
-    <h2>Catways</h2>
-
-    <h3>Ajouter un catway</h3>
-    <form id="catwayForm">
-        <input type="number" id="number" placeholder="Numéro" required>
-        <select id="type">
-            <option value="long">Long</option>
-            <option value="short">Short</option>
-        </select>
-        <input type="text" id="state" placeholder="État" required>
-        <button type="submit">Ajouter</button>
-    </form>
-
-    <button onclick="loadCatways()">Afficher les catways</button>
-    <ul id="catwaysList"></ul>
+   
 
     <h2>Réservations</h2>
 
