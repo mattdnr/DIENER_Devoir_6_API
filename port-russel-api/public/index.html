@@ -6,7 +6,17 @@
     <title>Login - Port Russel</title>
 </head>
 <body>
-    <h1>Login</h1>
+
+    <header>
+        <h1>Port de plaisance Russel</h1>
+    </header>
+    <p>
+        Cette application permet à la capitainerie du port Russell
+        de gérer les catways, les réservations ainsi que les utilisateurs.
+    </p>
+
+
+    <h2>Login</h2>
 
     <form id="loginForm">
         <input type="email" id="email" placeholder="Email" required><br><br>
@@ -14,7 +24,9 @@
         <button type="submit">Se connecter</button>
     </form>
 
-    <p id="error" style="color: red;"></p>
+    <p id="error" style="color: red;">
+        
+    </p>
 
     <script>
         const form = document.getElementById('loginForm');
