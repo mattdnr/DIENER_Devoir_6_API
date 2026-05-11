@@ -13,8 +13,34 @@
     <button onclick="logout()">Déconnexion</button>
 
     <h2>Catways</h2>
-    <button onclick="loadCatways()">Charger les catways</button>
+
+    <h3>Ajouter un catway</h3>
+    <form id="catwayForm">
+        <input type="number" id="number" placeholder="Numéro" required>
+        <select id="type">
+            <option value="long">Long</option>
+            <option value="short">Short</option>
+        </select>
+        <input type="text" id="state" placeholder="État" required>
+        <button type="submit">Ajouter</button>
+    </form>
+
+    <button onclick="loadCatways()">Afficher les catways</button>
     <ul id="catwaysList"></ul>
+
+    <h2>Réservations</h2>
+
+    <h3>Créer une réservation</h3>
+    <form id="reservationForm">
+        <input type="number" id="catwayId" placeholder="Catway ID" required>
+        <input type="text" id="clientName" placeholder="Client" required>
+        <input type="text" id="boatName" placeholder="Bateau" required>
+        <input type="date" id="startDate" required>
+        <input type="date" id="endDate" required>
+        <button type="submit">Créer</button>
+    </form>
+
+    <ul id="reservationsList"></ul>
 
     <script>
         const token = localStorage.getItem('token');
@@ -56,8 +82,77 @@
                 });
             } catch (error) {
                 console.log(error);
-            }
+            }  
         }
+
+        // Créer un catway
+        document.getElementById('catwayForm').addEventListener('submit', async(e) => {
+            e.preventDefault();
+            const body = {
+                catwayNumber: document.getElementById('number').value,
+                catwayType: document.getElementById('type').value,
+                catwayState: document.getElementById('state').value
+            };
+
+            await fetch('/api/catways', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(body)
+            });
+            loadCatways();
+        })
+
+        // Supprimer un catway
+        async function deleteCatway(id) {
+            await fetch('/api/catways/${id}', {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            loadCatways();
+        }
+
+        // Update un catway
+        async function updateCatway(id) {
+            const newState = prompt('Entrez le nouvel état du catway');
+            if (!newState) return;
+            await fetch('/api/catways/${id}', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ catwayState: newState })
+            });
+            loadCatways();
+        }
+
+        // Créer une réservation
+        document.getElementById('reservationForm').addEventListener('submit', async(e) => {
+            e.preventDefault();
+            const catwayId = document.getElementById('catwayId').value;
+            const body = {
+                clientName: document.getElementById('clientName').value,
+                boatName: document.getElementById('boatName').value,
+                startDate: document.getElementById('startDate').value,
+                endDate: document.getElementById('endDate').value
+            };
+            await fetch('/api/reservations/${catwayId}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify(body)
+            });
+            
+            alert('Réservation créée avec succès');
+        
+        });
     </script>
 
 </body>
