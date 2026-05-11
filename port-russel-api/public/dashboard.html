@@ -24,131 +24,25 @@
 
    
 
-    <h2>Réservations</h2>
-
-    <h3>Créer une réservation</h3>
-    <form id="reservationForm">
-        <input type="number" id="catwayId" placeholder="Catway ID" required>
-        <input type="text" id="clientName" placeholder="Client" required>
-        <input type="text" id="boatName" placeholder="Bateau" required>
-        <input type="date" id="startDate" required>
-        <input type="date" id="endDate" required>
-        <button type="submit">Créer</button>
-    </form>
-
-    <ul id="reservationsList"></ul>
-
     <script>
         const token = localStorage.getItem('token');
 
-        // Protection
         if (!token) {
-            window.location.href = '/';
+        window.location.href = '/';
         }
 
-        // Afficher utilisateur
         const user = JSON.parse(localStorage.getItem('user'));
-        document.getElementById('userInfo').textContent = `Bonjour, ${user.email}`;
 
-        // Logout
+        document.getElementById('userInfo').textContent =
+        `Connecté : ${user.username} (${user.email})`;
+
+        document.getElementById('date').textContent =
+        `Date : ${new Date().toLocaleDateString('fr-FR')}`;
+
         function logout() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
+            localStorage.clear();
             window.location.href = '/';
         }
-
-        // Charger les catways
-        async function loadCatways() {  
-            try {
-                const res = await fetch('/api/catways', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                const data = await res.json();
-
-                const list = document.getElementById('catwaysList');
-                list.innerHTML = '';
-
-                data.forEach(catway => {
-                    const li = document.createElement('li');
-                    li.textContent = 'Catway ${catway.catwayNumber} - ${catway.catwayType} -${catway.catwayState}';
-                    list.appendChild(li);
-                });
-            } catch (error) {
-                console.log(error);
-            }  
-        }
-
-        // Créer un catway
-        document.getElementById('catwayForm').addEventListener('submit', async(e) => {
-            e.preventDefault();
-            const body = {
-                catwayNumber: document.getElementById('number').value,
-                catwayType: document.getElementById('type').value,
-                catwayState: document.getElementById('state').value
-            };
-
-            await fetch('/api/catways', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(body)
-            });
-            loadCatways();
-        })
-
-        // Supprimer un catway
-        async function deleteCatway(id) {
-            await fetch('/api/catways/${id}', {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            loadCatways();
-        }
-
-        // Update un catway
-        async function updateCatway(id) {
-            const newState = prompt('Entrez le nouvel état du catway');
-            if (!newState) return;
-            await fetch('/api/catways/${id}', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ catwayState: newState })
-            });
-            loadCatways();
-        }
-
-        // Créer une réservation
-        document.getElementById('reservationForm').addEventListener('submit', async(e) => {
-            e.preventDefault();
-            const catwayId = document.getElementById('catwayId').value;
-            const body = {
-                clientName: document.getElementById('clientName').value,
-                boatName: document.getElementById('boatName').value,
-                startDate: document.getElementById('startDate').value,
-                endDate: document.getElementById('endDate').value
-            };
-            await fetch('/api/reservations/${catwayId}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`
-                },
-                body: JSON.stringify(body)
-            });
-            
-            alert('Réservation créée avec succès');
-        
-        });
     </script>
 
 </body>
