@@ -6,11 +6,11 @@
     <title>Tableau de bord</title>
 </head>
 <body>
-    <h1>Tableau de bord</h1>
-
-    <p id="userInfo"></p>
-
-    <p id="date"></p>
+    <header>
+        <h1>Tableau de bord</h1>
+        <p id="userInfo"></p>
+        <p id="date"></p>
+    </header>
 
     <h2>Navigation</h2>
     <div class="menu">
@@ -19,10 +19,7 @@
         <a href="/users.html">Utilisateurs</a>
         <a href="/api-docs">Documentation API</a>
     </div>
-
     <button onclick="logout()">Déconnexion</button>
-
-   
 
     <script>
         const token = localStorage.getItem('token');
@@ -44,6 +41,5 @@
             window.location.href = '/';
         }
     </script>
-
 </body>
 </html>
